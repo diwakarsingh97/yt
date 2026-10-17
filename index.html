@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>CLARIFY — Your Knowledge, Unlocked</title>
+<style>
+:root{
+  --bg:#0b0b14;--panel:#12121f;--panel2:#191929;
+  --text:#f4f1ff;--muted:#9392ac;--line:#28273b;
+  --accent:#9875ff;--accent2:#c1adff;--soft:#241b42;
+  --green:#71dfb0;--red:#ff8198;--radius:20px;
+}
+body.light{
+  --bg:#f5f4fa;--panel:#fff;--panel2:#f0eef8;
+  --text:#211b35;--muted:#77718e;--line:#e2deef;
+  --accent:#7049df;--accent2:#6c4bd1;--soft:#eee7ff;
+  --green:#18865d;--red:#c63c60;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+font-size:14px;transition:background .2s,color .2s}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+outline:2px solid var(--accent);outline-offset:3px}
+button:disabled{opacity:.4;cursor:not-allowed}
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;position:fixed;inset:0 auto 0 0;padding:25px 17px;
+background:var(--panel);border-right:1px solid var(--line);display:flex;
+flex-direction:column;z-index:10}
+.brand{display:flex;align-items:center;gap:11px;padding:0 10px 28px}
+.logo{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;
+background:linear-gradient(140deg,#b8a0ff,#7047dc);color:white;
+font-size:21px;font-weight:900;box-shadow:0 5px 25px #8259e755}
+.brandname{font-size:20px;font-weight:850;letter-spacing:2px}
+.brandtag{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:1px}
+.navlabel{color:var(--muted);font-size:10px;letter-spacing:1.7px;
+font-weight:800;padding:13px 12px 8px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;
+background:transparent;color:var(--muted);padding:12px;border-radius:12px;
+text-align:left;margin:2px 0;font-weight:600;transition:.18s}
+.navbtn:hover{background:var(--panel2);color:var(--text)}
+.navbtn.active{background:var(--soft);color:var(--accent2)}
+.navicon{width:20px;text-align:center;font-size:17px}
+.navbottom{margin-top:auto}
+.localbadge{padding:13px;border:1px solid var(--line);border-radius:13px;
+font-size:11px;color:var(--muted);line-height:1.7}
+.localbadge strong{color:var(--green)}
+.main{margin-left:248px;width:calc(100% - 248px);min-width:0}
+.topbar{height:77px;display:flex;align-items:center;justify-content:space-between;
+padding:0 36px;border-bottom:1px solid var(--line);position:sticky;top:0;
+background:var(--bg);z-index:5;gap:14px}
+.crumb{color:var(--muted);font-size:12px}
+.topright{display:flex;align-items:center;gap:10px}
+.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);
+width:39px;height:39px;border-radius:12px;display:grid;place-items:center}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--soft);
+color:var(--accent2);display:grid;place-items:center;font-weight:800}
+.content{max-width:1450px;margin:auto;padding:31px 36px 65px}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-size:29px;letter-spacing:-1px;margin:0 0 8px;font-weight:800}
+h2{font-size:17px;margin:0;font-weight:750}
+h3{font-size:14px;margin:0 0 8px}
+p{line-height:1.7}
+.muted{color:var(--muted)}
+.small{font-size:11px}
+.headingrow{display:flex;justify-content:space-between;align-items:center;
+gap:15px;margin-bottom:22px;flex-wrap:wrap}
+.subheading{color:var(--muted);margin:0}
+.hero{padding:30px;border-radius:24px;border:1px solid #574282;
+background:radial-gradient(ellipse at 95% 10%,#7654a333,transparent 45%),
+linear-gradient(115deg,#21183b,#141326 65%,#161426);
+position:relative;overflow:hidden;margin-bottom:23px}
+body.light .hero{background:linear-gradient(115deg,#eee6ff,#f8f5ff);
+border-color:#d8c8ff}
+.hero:after{content:"✳";position:absolute;right:40px;top:20px;font-size:115px;
+color:#b49aff;opacity:.12}
+.eyebrow{color:var(--accent2);text-transform:uppercase;letter-spacing:2px;
+font-size:10px;font-weight:800}
+.hero h1{font-size:31px;margin:12px 0}
+.hero p{color:var(--muted);max-width:510px;margin:0 0 23px}
+.btn{border:0;border-radius:11px;padding:11px 16px;background:var(--accent);
+color:white;font-weight:750;display:inline-flex;align-items:center;
+justify-content:center;gap:8px;transition:transform .15s,opacity .15s}
+.btn:hover{transform:translateY(-1px);opacity:.92}
+.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.danger{background:#6c243b;color:#ffd7e1}
+.btn.smallbtn{padding:8px 11px;font-size:12px}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:24px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+padding:20px;min-width:0}
+.stathead{display:flex;justify-content:space-between;align-items:center}
+.staticon{width:37px;height:37px;display:grid;place-items:center;
+border-radius:12px;background:var(--soft);color:var(--accent2);font-size:17px}
+.statvalue{font-size:29px;font-weight:800;letter-spacing:-1px;margin:18px 0 4px}
+.statlabel{color:var(--muted);font-size:12px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;
+gap:12px;margin:27px 0 15px}
+.split{grid-template-columns:minmax(0,1.35fr) minmax(250px,1fr)}
+.recentlist{display:grid;gap:0}
+.docrow{display:flex;align-items:center;gap:12px;padding:13px 0;
+border-bottom:1px solid var(--line);min-width:0}
+.docrow:last-child{border-bottom:0}
+.fileicon{width:43px;height:46px;border-radius:11px;background:var(--soft);
+color:var(--accent2);display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.docmeta{min-width:0;flex:1}
+.docname{font-weight:700;overflow-wrap:anywhere}
+.docactions{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.progress{height:6px;background:var(--panel2);border-radius:9px;overflow:hidden}
+.progress span{height:100%;display:block;background:linear-gradient(90deg,var(--accent),#c4a8ff);
+border-radius:9px;transition:width .3s}
+.quickgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.quick{border:1px solid var(--line);background:var(--panel);color:var(--text);
+border-radius:15px;padding:17px;text-align:left;display:flex;gap:12px;align-items:center}
+.quick:hover{border-color:var(--accent)}
+.quickicon{font-size:22px}
+.quick strong{display:block;margin-bottom:5px}
+.quick span:last-child{font-size:11px;color:var(--muted)}
+.searchbox{position:relative;min-width:160px;flex:1;max-width:360px}
+.searchbox input{width:100%;padding:12px 14px 12px 37px}
+.searchsymbol{position:absolute;left:13px;top:11px;color:var(--muted)}
+input,textarea,select{background:var(--panel);border:1px solid var(--line);
+border-radius:11px;color:var(--text);padding:12px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:125px;line-height:1.65}
+label{display:block;font-size:12px;font-weight:700;margin:14px 0 7px}
+select option{background:var(--panel)}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.filters select{width:auto;min-width:130px}
+.docgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.doccard{display:flex;flex-direction:column;gap:12px}
+.doccard .fileicon{width:48px;height:52px}
+.doccard h3{overflow-wrap:anywhere}
+.doccard .docbottom{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.empty{text-align:center;padding:40px 18px;color:var(--muted)}
+.emptyicon{font-size:36px;margin-bottom:12px}
+.empty h3{color:var(--text);font-size:16px}
+.notegrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.notecard{cursor:pointer;min-height:165px;display:flex;flex-direction:column;gap:12px}
+.notecard:hover{border-color:var(--accent)}
+.notecard p{color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;
+display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin:0}
+.tag{display:inline-flex;background:var(--soft);color:var(--accent2);
+padding:5px 8px;border-radius:7px;font-size:10px;font-weight:700}
+.notefoot{display:flex;justify-content:space-between;gap:8px;margin-top:auto;
+font-size:10px;color:var(--muted)}
+.flasharea{max-width:700px;margin:20px auto}
+.flashcard{min-height:290px;border:1px solid #574282;border-radius:23px;
+background:radial-gradient(ellipse at 90% 10%,#8c6aff26,transparent 45%),var(--panel);
+display:flex;flex-direction:column;justify-content:center;align-items:center;
+text-align:center;padding:30px;cursor:pointer}
+.flashcard .flashlabel{font-size:10px;letter-spacing:2px;color:var(--accent2);
+text-transform:uppercase;margin-bottom:25px}
+.flashcard .flashtext{font-size:25px;line-height:1.5;font-weight:750;overflow-wrap:anywhere}
+.flashcontrols{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:17px 0}
+.quizoption{display:block;width:100%;text-align:left;border:1px solid var(--line);
+background:var(--panel2);color:var(--text);padding:14px;border-radius:12px;margin:10px 0}
+.quizoption:hover{border-color:var(--accent)}
+.quizoption.correct{border-color:var(--green);background:#1b453b55}
+.quizoption.wrong{border-color:var(--red);background:#6b263955}
+.chart{height:160px;display:flex;align-items:end;gap:12px;padding:20px 0 0}
+.barcol{height:100%;flex:1;display:flex;flex-direction:column;justify-content:end;
+align-items:center;gap:8px;min-width:0}
+.bar{width:min(100%,35px);min-height:3px;background:linear-gradient(180deg,#b9a3ff,var(--accent));
+border-radius:6px 6px 2px 2px;transition:height .3s}
+.barlabel{font-size:10px;color:var(--muted)}
+.barval{font-size:10px;color:var(--muted)}
+.settingrow{display:flex;justify-content:space-between;align-items:center;gap:18px;
+padding:17px 0;border-bottom:1px solid var(--line)}
+.settingrow:last-child{border-bottom:0}
+.settingrow p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.toggle{width:45px;height:25px;border-radius:20px;background:var(--line);
+position:relative;border:0;flex-shrink:0}
+.toggle:after{content:"";position:absolute;left:4px;top:4px;width:17px;height:17px;
+border-radius:50%;background:white;transition:.2s}
+.toggle.on{background:var(--accent)}
+.toggle.on:after{left:24px}
+.premium{background:radial-gradient(ellipse at top right,#815bcb44,transparent 65%),var(--panel);
+border:1px solid #574282;border-radius:20px;padding:24px}
+.premiumprice{font-size:31px;font-weight:850;margin:12px 0}
+.checklist{list-style:none;padding:0;line-height:2.2;color:var(--muted)}
+.checklist li:before{content:"✓";color:var(--green);margin-right:10px;font-weight:800}
+.mobilebrand{display:none}
+.bottomnav{display:none}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);
+background:var(--text);color:var(--bg);padding:12px 18px;border-radius:12px;
+z-index:100;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;
+box-shadow:0 10px 35px #0003}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);
+border-radius:20px;width:min(520px,calc(100% - 28px));padding:24px;
+max-height:90vh;overflow:auto}
+dialog::backdrop{background:#05040dbb;backdrop-filter:blur(4px)}
+.dialoghead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.formactions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+.reader{width:100%;height:65vh;border:1px solid var(--line);border-radius:12px;background:#fff}
+.onboard{position:fixed;inset:0;z-index:200;background:var(--bg);
+display:flex;align-items:center;justify-content:center;padding:20px}
+.onboardbox{width:min(470px,100%);text-align:center}
+.onboardbox .logo{width:64px;height:64px;font-size:30px;border-radius:20px;margin:0 auto 20px}
+.onboardbox h1{font-size:36px}
+.onboardbox p{color:var(--muted)}
+.onboardbox input{text-align:center;margin:12px 0 18px}
+.onboardbox .btn{width:100%}
+@media(max-width:1050px){
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.docgrid,.notegrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.content{padding:25px 22px}
+.topbar{padding:0 22px}
+}
+@media(max-width:700px){
+.sidebar{display:none}
+.main{margin-left:0;width:100%;padding-bottom:72px}
+.topbar{height:62px;padding:0 16px}
+.content{padding:21px 15px 35px}
+h1{font-size:25px}
+.hero{padding:23px 20px}
+.hero h1{font-size:26px}
+.hero:after{right:10px;font-size:75px}
+.stats{gap:10px}
+.card{padding:15px;border-radius:16px}
+.statvalue{font-size:25px;margin-top:13px}
+.split{grid-template-columns:1fr}
+.docgrid,.notegrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.docgrid .card,.notegrid .card{padding:13px}
+.quickgrid{gap:9px}
+.quick{padding:13px;align-items:flex-start;gap:8px}
+.quickicon{font-size:18px}
+.topright .avatar{display:none}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:50;
+display:flex;justify-content:space-around;padding:8px 3px max(8px,env(safe-area-inset-bottom));
+background:var(--panel);border-top:1px solid var(--line)}
+.bottomnav button{border:0;background:transparent;color:var(--muted);
+font-size:10px;display:flex;flex-direction:column;gap:4px;align-items:center;
+min-width:0;flex:1;padding:5px 0}
+.bottomnav button span:first-child{font-size:19px}
+.bottomnav button.active{color:var(--accent2)}
+.bottomnav .navword{white-space:nowrap;font-size:9px}
+.flashcard{min-height:260px}
+.flashcard .flashtext{font-size:22px}
+.settingrow{gap:12px}
+}
+@media(max-width:380px){
+.docgrid,.notegrid{grid-template-columns:1fr}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hero .btn{width:100%}
+.quick{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div id="onboard" class="onboard" hidden>
+  <div class="onboardbox">
+    <div class="logo">C</div>
+    <div class="eyebrow">YOUR KNOWLEDGE, UNLOCKED</div>
+    <h1>Meet CLARIFY.</h1>
+    <p>A calmer space to read, learn, remember and understand more.</p>
+    <label for="username" style="text-align:left">What should we call you?</label>
+    <input id="username" maxlength="40" placeholder="Your first name" autocomplete="given-name">
+    <button class="btn" onclick="finishOnboarding()">Enter your workspace →</button>
+    <p class="small">Your workspace is stored on this device.</p>
+  </div>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo">C</div>
+    <div><div class="brandname">CLARIFY</div><div class="brandtag">KNOW MORE. UNDERSTAND BETTER.</div></div>
+  </div>
+  <div class="navlabel">WORKSPACE</div>
+  <button class="navbtn active" data-page="dashboard"><span class="navicon">⌂</span>Overview</button>
+  <button class="navbtn" data-page="documents"><span class="navicon">▤</span>My documents</button>
+  <button class="navbtn" data-page="notes"><span class="navicon">▧</span>Notes & insights</button>
+  <button class="navbtn" data-page="flashcards"><span class="navicon">▣</span>Flashcards</button>
+  <button class="navbtn" data-page="quiz"><span class="navicon">✳</span>Quiz studio</button>
+  <div class="navlabel">YOUR PROGRESS</div>
+  <button class="navbtn" data-page="analytics"><span class="navicon">◷</span>Learning analytics</button>
+  <button class="navbtn" data-page="membership"><span class="navicon">✧</span>Membership</button>
+  <div class="navbottom">
+    <button class="navbtn" data-page="settings"><span class="navicon">⚙</span>Settings</button>
+    <div class="localbadge">● <strong>LOCAL WORKSPACE</strong><br>Your data stays on this device. No AI or cloud connection required.</div>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="crumb" id="crumb">WORKSPACE / OVERVIEW</div>
+  <div class="topright">
+    <button class="iconbtn" title="Toggle light/dark mode" onclick="toggleTheme()">☼</button>
+    <button class="iconbtn" title="Settings" onclick="go('settings')">⚙</button>
+    <div class="avatar" id="avatar">C</div>
+  </div>
+</header>
+
+<div class="content">
+<section class="page active" id="page-dashboard">
+  <div class="headingrow">
+    <div><h1 id="greeting">Welcome to CLARIFY.</h1><p class="subheading">Your ideas, organized. Your progress, growing.</p></div>
+    <button class="btn secondary" onclick="go('documents')">＋ Add a document</button>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">YOUR PERSONAL KNOWLEDGE SPACE</div>
+    <h1>Make room for<br>what matters.</h1>
+    <p>Read at your pace. Capture what matters. Build knowledge that stays with you.</p>
+    <button class="btn" onclick="go('documents')">Explore your library ↗</button>
+  </div>
+  <div class="grid stats">
+    <div class="card"><div class="stathead"><span class="statlabel">Documents</span><span class="staticon">▤</span></div><div class="statvalue" id="statDocs">0</div><div class="statlabel">In your library</div></div>
+    <div class="card"><div class="stathead"><span class="statlabel">Notes saved</span><span class="staticon">▧</span></div><div class="statvalue" id="statNotes">0</div><div class="statlabel">Ideas worth keeping</div></div>
+    <div class="card"><div class="stathead"><span class="statlabel">Flashcards</span><span class="staticon">▣</span></div><div class="statvalue" id="statCards">0</div><div class="statlabel">Ready to review</div></div>
+    <div class="card"><div class="stathead"><span class="statlabel">Quiz accuracy</span><span class="staticon">✳</span></div><div class="statvalue" id="statAccuracy">—</div><div class="statlabel">Across completed quizzes</div></div>
+  </div>
+  <div class="grid split">
+    <div>
+      <div class="sectionhead"><h2>Recently added</h2><button class="btn ghost smallbtn" onclick="go('documents')">View library →</button></div>
+      <div class="card"><div id="recentDocs" class="recentlist"></div></div>
+      <div class="sectionhead"><h2>Shortcuts</h2></div>
+      <div class="grid quickgrid">
+        <button class="quick" onclick="openNote()"><span class="quickicon">✎</span><span><strong>Capture an idea</strong><span>Write a quick note</span></span></button>
+        <button class="quick" onclick="openFlashcard()"><span class="quickicon">▣</span><span><strong>Create flashcards</strong><span>Remember what you learn</span></span></button>
+        <button class="quick" onclick="startQuiz()"><span class="quickicon">✳</span><span><strong>Test yourself</strong><span>Practice your knowledge</span></span></button>
+        <button class="quick" onclick="go('analytics')"><span class="quickicon">◷</span><span><strong>View progress</strong><span>See your learning stats</span></span></button>
+      </div>
+    </div>
+    <div>
+      <div class="sectionhead"><h2>Your study activity</h2></div>
+      <div class="card">
+        <div class="stathead"><span class="muted">Quiz performance</span><span class="tag">LIFETIME</span></div>
+        <div class="statvalue" id="dashScore">0%</div>
+        <div class="progress"><span id="dashProgress" style="width:0%"></span></div>
+        <p class="muted small" id="dashScoreCaption">Complete a quiz to see your performance.</p>
+        <div class="sectionhead"><h3>Last 7 days</h3></div>
+        <div id="dashChart" class="chart"></div>
+      </div>
+      <div class="sectionhead"><h2>Keep going</h2></div>
+      <div class="card">
+        <div class="staticon" style="margin-bottom:15px">✦</div>
+        <h3>Small steps, lasting knowledge.</h3>
+        <p class="muted">Save a new idea, review a flashcard, or take a short quiz today.</p>
+        <button class="btn secondary" onclick="go('flashcards')">Start reviewing →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-documents">
+  <div class="headingrow"><div><h1>My documents</h1><p class="subheading">Your personal library of reading material.</p></div>
+  <button class="btn" onclick="document.getElementById('pdfInput').click()">＋ Import PDF</button></div>
+  <input type="file" id="pdfInput" accept=".pdf,application/pdf" multiple hidden>
+  <div class="filters">
+    <div class="searchbox"><span class="searchsymbol">⌕</span><input id="docSearch" placeholder="Search your library..." oninput="renderDocs()"></div>
+    <select id="docSort" onchange="renderDocs()"><option value="new">Recently added</option><option value="az">Name A–Z</option><option value="large">Largest first</option></select>
+    <span class="muted small" id="docCount">0 documents</span>
+  </div>
+  <div class="grid docgrid" id="docGrid"></div>
+</section>
+
+<section class="page" id="page-notes">
+  <div class="headingrow"><div><h1>Notes & insights</h1><p class="subheading">Capture the ideas you don't want to lose.</p></div><button class="btn" onclick="openNote()">＋ New note</button></div>
+  <div class="filters"><div class="searchbox"><span class="searchsymbol">⌕</span><input id="noteSearch" placeholder="Search notes..." oninput="renderNotes()"></div>
+  <select id="noteFilter" onchange="renderNotes()"><option value="all">All notes</option><option value="pinned">Pinned only</option></select></div>
+  <div class="grid notegrid" id="noteGrid"></div>
+</section>
+
+<section class="page" id="page-flashcards">
+  <div class="headingrow"><div><h1>Flashcards</h1><p class="subheading">Active recall makes learning stick.</p></div><button class="btn" onclick="openFlashcard()">＋ New card</button></div>
+  <div class="grid stats">
+    <div class="card"><div class="statlabel">Total cards</div><div class="statvalue" id="fcTotal">0</div></div>
+    <div class="card"><div class="statlabel">Reviewed today</div><div class="statvalue" id="fcReviewed">0</div></div>
+    <div class="card"><div class="statlabel">Review queue</div><div class="statvalue" id="fcQueue">0</div></div>
+    <div class="card"><div class="statlabel">Known cards</div><div class="statvalue" id="fcKnown">0</div></div>
+  </div>
+  <div class="card flasharea" id="flashWorkspace">
+    <div class="headingrow"><div><h2>Review session</h2><p class="muted small" id="flashCount">No cards yet</p></div><select id="flashCategory" style="width:auto;max-width:150px" onchange="resetFlash()"><option value="all">All subjects</option></select></div>
+    <div class="flashcard" onclick="flipFlash()"><div class="flashlabel" id="flashLabel">READY WHEN YOU ARE</div><div class="flashtext" id="flashText">Create your first flashcard to begin.</div><p class="muted small" id="flashHint">Tap the card to reveal the answer.</p></div>
+    <div class="flashcontrols"><button class="btn secondary" onclick="prevFlash()">← Previous</button><button class="btn" onclick="flipFlash()">Reveal answer</button><button class="btn secondary" onclick="nextFlash()">Next →</button></div>
+    <div class="flashcontrols"><button class="btn ghost" onclick="rateFlash(false)">Need practice</button><button class="btn" onclick="rateFlash(true)">I know this ✓</button></div>
+  </div>
+  <div class="sectionhead"><h2>Your cards</h2><span class="muted small">Select a card to study it</span></div>
+  <div class="grid notegrid" id="flashList"></div>
+</section>
+
+<section class="page" id="page-quiz">
+  <div class="headingrow"><div><h1>Quiz studio</h1><p class="subheading">Create practice questions and test what you know.</p></div></div>
+  <div class="grid split">
+    <div class="card">
+      <div class="eyebrow">PRACTICE SESSION</div><h2 style="margin-top:10px">Your knowledge, tested.</h2>
+      <p class="muted">Build a quiz from your own flashcards. CLARIFY uses the questions and answers you enter; it does not generate AI questions.</p>
+      <div class="statvalue" id="quizAvailable">0</div><div class="muted small">Cards available for practice</div>
+      <div style="margin-top:22px"><button class="btn" id="startQuizBtn" onclick="startQuiz()">Start a quiz →</button></div>
+      <p class="muted small">For multiple-choice practice, add at least two flashcards with different answers.</p>
+    </div>
+    <div class="card">
+      <h2>Recent results</h2><div id="quizHistory" style="margin-top:14px"></div>
+    </div>
+  </div>
+  <div id="quizArea" class="card" style="display:none;max-width:720px;margin:24px auto"></div>
+</section>
+
+<section class="page" id="page-analytics">
+  <div class="headingrow"><div><h1>Learning analytics</h1><p class="subheading">A clear picture of the progress you're making.</p></div><button class="btn secondary" onclick="exportData()">↓ Export data</button></div>
+  <div class="grid stats">
+    <div class="card"><div class="statlabel">Documents saved</div><div class="statvalue" id="anDocs">0</div></div>
+    <div class="card"><div class="statlabel">Notes captured</div><div class="statvalue" id="anNotes">0</div></div>
+    <div class="card"><div class="statlabel">Quizzes completed</div><div class="statvalue" id="anQuizzes">0</div></div>
+    <div class="card"><div class="statlabel">Average accuracy</div><div class="statvalue" id="anAccuracy">—</div></div>
+  </div>
+  <div class="grid split">
+    <div class="card"><h2>Quiz accuracy history</h2><p class="muted small">Your most recent completed quizzes.</p><div id="accuracyChart" class="chart"></div></div>
+    <div class="card"><h2>Your milestones</h2><div id="milestones" style="margin-top:15px"></div></div>
+  </div>
+  <div class="sectionhead"><h2>Study history</h2></div><div class="card" id="historyTable"></div>
+</section>
+
+<section class="page" id="page-membership">
+  <div class="headingrow"><div><h1>Membership</h1><p class="subheading">More room for your knowledge.</p></div></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:18px">
+    <div class="card"><div class="eyebrow">YOUR CURRENT PLAN</div><h2 style="margin-top:13px">CLARIFY Free</h2><div class="premiumprice">₹0 <span class="muted small">/ forever</span></div><p class="muted">Core tools to start building your personal knowledge library.</p><ul class="checklist"><li>Local document library</li><li>Notes and bookmarks</li><li>Flashcards and quizzes</li><li>Progress tracking</li><li>Offline core workspace</li></ul><button class="btn secondary" disabled>Current plan</button></div>
+    <div class="premium"><div class="eyebrow">✦ FUTURE PREMIUM PLAN</div><h2 style="margin-top:13px">CLARIFY Plus</h2><div class="premiumprice">₹49 <span class="muted small">/ month</span></div><p class="muted">A proposed membership for users who want a more customizable learning workspace.</p><ul class="checklist"><li>Premium themes and customization</li><li>Advanced study organization</li><li>More export and backup options</li><li>Expanded study statistics</li><li>Future premium tools</li></ul><button class="btn" onclick="toast('Purchases are not enabled in this HTML prototype.')">Explore Plus ✧</button><p class="muted small">Yearly price idea: ₹399/year. No payment is collected here.</p></div>
+  </div>
+  <div class="card" style="margin-top:20px"><h3>Important</h3><p class="muted">This is a free, offline HTML prototype. It does not include Google Play Billing, server-verified subscriptions, or a real payment flow. Those are needed before charging Android users.</p></div>
+</section>
+
+<section class="page" id="page-settings">
+  <div class="headingrow"><div><h1>Settings</h1><p class="subheading">Make your workspace feel like yours.</p></div></div>
+  <div class="grid split">
+    <div class="card">
+      <h2>Personal preferences</h2>
+      <div class="settingrow"><div><strong>Profile name</strong><p>Used for your dashboard greeting.</p></div><button class="btn secondary smallbtn" onclick="changeName()">Edit</button></div>
+      <div class="settingrow"><div><strong>Appearance</strong><p>Switch between dark and light themes.</p></div><button class="btn secondary smallbtn" onclick="toggleTheme()">Toggle</button></div>
+      <div class="settingrow"><div><strong>Onboarding</strong><p>Show the welcome screen next time.</p></div><button class="btn secondary smallbtn" onclick="replayOnboarding()">Replay</button></div>
+    </div>
+    <div class="card">
+      <h2>Data & privacy</h2>
+      <div class="settingrow"><div><strong>Export workspace</strong><p>Download your notes, flashcards, settings and quiz history as JSON.</p></div><button class="btn secondary smallbtn" onclick="exportData()">Export</button></div>
+      <div class="settingrow"><div><strong>Import workspace</strong><p>Restore an earlier JSON backup. Existing notes and cards are replaced.</p></div><button class="btn secondary smallbtn" onclick="document.getElementById('backupInput').click()">Import</button></div>
+      <input type="file" id="backupInput" accept=".json,application/json" hidden>
+      <div class="settingrow"><div><strong>Clear workspace</strong><p>Delete your local notes, documents and progress.</p></div><button class="btn danger smallbtn" onclick="clearWorkspace()">Clear</button></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px"><h2>About CLARIFY</h2><p class="muted">Version 1.0 · Local-first knowledge workspace.</p><p class="muted small">Your workspace data is stored in this browser on this device. Clearing browser site data may remove it. Export backups regularly. Imported documents are not uploaded to a server.</p></div>
+</section>
+</div>
+</main>
+</div>
+
+<nav class="bottomnav">
+<button data-page="dashboard" class="active"><span>⌂</span><span class="navword">Home</span></button>
+<button data-page="documents"><span>▤</span><span class="navword">Documents</span></button>
+<button data-page="notes"><span>▧</span><span class="navword">Notes</span></button>
+<button data-page="flashcards"><span>▣</span><span class="navword">Cards</span></button>
+<button data-page="settings"><span>⚙</span><span class="navword">Settings</span></button>
+</nav>
+
+<dialog id="noteDialog">
+<form id="noteForm">
+<div class="dialoghead"><h2 id="noteDialogTitle">New note</h2><button type="button" class="iconbtn" onclick="closeDialog('noteDialog')">×</button></div>
+<input id="noteId" type="hidden">
+<label for="noteTitle">Title</label><input id="noteTitle" maxlength="120" placeholder="Give your idea a name" required>
+<label for="noteBody">Your note</label><textarea id="noteBody" maxlength="20000" placeholder="Write down what you learned..." required></textarea>
+<label for="noteTag">Subject or tag</label><input id="noteTag" maxlength="50" placeholder="e.g. Study, Work, Ideas">
+<div class="settingrow"><div><strong>Pin this note</strong><p>Keep it easy to find.</p></div><button type="button" id="pinToggle" class="toggle" aria-pressed="false" onclick="togglePinForm()"></button></div>
+<div class="formactions"><button type="button" class="btn ghost" onclick="closeDialog('noteDialog')">Cancel</button><button class="btn" type="submit">Save note</button></div>
+</form>
+</dialog>
+
+<dialog id="flashDialog">
+<form id="flashForm">
+<div class="dialoghead"><h2 id="flashDialogTitle">New flashcard</h2><button type="button" class="iconbtn" onclick="closeDialog('flashDialog')">×</button></div>
+<input id="flashId" type="hidden">
+<label for="flashQuestion">Question / front</label><textarea id="flashQuestion" maxlength="3000" placeholder="What do you want to remember?" required style="min-height:85px"></textarea>
+<label for="flashAnswer">Answer / back</label><textarea id="flashAnswer" maxlength="5000" placeholder="Write the answer..." required style="min-height:85px"></textarea>
+<label for="flashSubject">Subject</label><input id="flashSubject" maxlength="60" placeholder="e.g. Finance, Biology, Language">
+<div class="formactions"><button type="button" class="btn ghost" onclick="closeDialog('flashDialog')">Cancel</button><button type="submit" class="btn">Save flashcard</button></div>
+</form>
+</dialog>
+
+<dialog id="readerDialog" style="width:min(950px,calc(100% - 20px))">
+<div class="dialoghead"><div><h2 id="readerTitle">Document reader</h2><p class="muted small">PDF preview is rendered by your browser.</p></div><button class="iconbtn" onclick="closeReader()">×</button></div>
+<div id="readerBody"></div>
+<div class="formactions"><button class="btn secondary" onclick="closeReader()">Close reader</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* CLARIFY: local-first HTML prototype.
+   IndexedDB stores imported PDF blobs. LocalStorage stores smaller app data.
+   No API calls, AI service, or server is used. */
+
+const $ = id => document.getElementById(id);
+const today = () => new Date().toISOString().slice(0,10);
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+const safe = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDate = v => {try{return new Date(v).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}catch{return ""}};
+const fmtSize = n => n<1024? n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(1)+" MB";
+
+let state = {
+  name:"",theme:"dark",notes:[],cards:[],quizzes:[],activity:{},
+  docs:[],onboarded:false
+};
+let db=null, currentPage="dashboard", notePinned=false;
+let flashQueue=[],flashIndex=0,flashFlipped=false,flashSessionReviewed=new Set();
+let quizSession=null, readerUrl=null, toastTimer=null;
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem("clarify_v1");
+    if(raw){
+      const d=JSON.parse(raw);
+      state={...state,...d,
+        notes:Array.isArray(d.notes)?d.notes:[],
+        cards:Array.isArray(d.cards)?d.cards:[],
+        quizzes:Array.isArray(d.quizzes)?d.quizzes:[],
+        docs:Array.isArray(d.docs)?d.docs:[],
+        activity:d.activity&&typeof d.activity==="object"?d.activity:{}
+      };
+    }
+  }catch(e){console.warn("Could not read saved workspace",e)}
+}
+function save(){
+  try{
+    const compact={...state,docs:state.docs.map(({id,name,size,type,added})=>({id,name,size,type,added}))};
+    localStorage.setItem("clarify_v1",JSON.stringify(compact));
+  }catch(e){toast("Storage is full. Export your data or remove some content.");}
+}
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    if(!("indexedDB" in window)){resolve(null);return}
+    const req=indexedDB.open("clarify_files_v1",1);
+    req.onupgradeneeded=()=>{
+      const d=req.result;
+      if(!d.objectStoreNames.contains("pdfs"))d.createObjectStore("pdfs",{keyPath:"id"});
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function dbPut(item){
+  return new Promise((resolve,reject)=>{
+    if(!db){reject(new Error("File storage unavailable"));return}
+    const tx=db.transaction("pdfs","readwrite");
+    tx.objectStore("pdfs").put(item);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error);
+  });
+}
+function dbGet(id){
+  return new Promise((resolve,reject)=>{
+    if(!db){reject(new Error("File storage unavailable"));return}
+    const req=db.transaction("pdfs","readonly").objectStore("pdfs").get(id);
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function dbDelete(id){
+  return new Promise((resolve,reject)=>{
+    if(!db){resolve();return}
+    const tx=db.transaction("pdfs","readwrite");
+    tx.objectStore("pdfs").delete(id);
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+  });
+}
+function dbClear(){
+  return new Promise((resolve,reject)=>{
+    if(!db){resolve();return}
+    const tx=db.transaction("pdfs","readwrite");
+    tx.objectStore("pdfs").clear();
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+  });
+}
+function toast(message){
+  const el=$("toast");el.textContent=message;el.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+}
+function closeDialog(id){$(id).close()}
+function go(page){
+  if(!$( "page-"+page))return;
+  currentPage=page;
+  document.querySelectorAll(".page").forEach(el=>el.classList.toggle("active",el.id==="page-"+page));
+  document.querySelectorAll("[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
+  const labels={dashboard:"OVERVIEW",documents:"MY DOCUMENTS",notes:"NOTES & INSIGHTS",
+    flashcards:"FLASHCARDS",quiz:"QUIZ STUDIO",analytics:"LEARNING ANALYTICS",
+    membership:"MEMBERSHIP",settings:"SETTINGS"};
+  $("crumb").textContent="WORKSPACE / "+(labels[page]||page.toUpperCase());
+  window.scrollTo({top:0,behavior:"smooth"});
+  renderAll();
+}
+document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",()=>go(el.dataset.page)));
+function toggleTheme(){
+  state.theme=state.theme==="light"?"dark":"light";
+  document.body.classList.toggle("light",state.theme==="light");
+  save();toast("Appearance updated.");
+}
+function setTheme(){
+  document.body.classList.toggle("light",state.theme==="light");
+}
+function finishOnboarding(){
+  const name=$("username").value.trim();
+  if(!name){$("username").focus();toast("Enter your name to continue.");return}
+  state.name=name.slice(0,40);state.onboarded=true;save();
+  $("onboard").hidden=true;updateGreeting();toast("Welcome to CLARIFY, "+state.name+".");
+}
+function updateGreeting(){
+  const n=state.name||"there";
+  $("greeting").textContent="Welcome"+(n==="there"?"":", "+n)+".";
+  $("avatar").textContent=(state.name||"C").charAt(0).toUpperCase();
+}
+function changeName(){
+  const v=prompt("What should CLARIFY call you?",state.name||"");
+  if(v===null)return;
+  const n=v.trim();if(!n){toast("Name was not changed.");return}
+  state.name=n.slice(0,40);save();updateGreeting();toast("Profile updated.");
+}
+function replayOnboarding(){
+  $("username").value=state.name||"";
+  $("onboard").hidden=false;
+}
+function activityToday(){
+  state.activity[today()]=Number(state.activity[today()]||0)+1;
+  save();
+}
+function logActivity(){activityToday()}
+
+async function importPDFs(files){
+  if(!files||!files.length)return;
+  let added=0;
+  for(const file of Array.from(files)){
+    if(file.type!=="application/pdf"&&!file.name.toLowerCase().endsWith(".pdf")){
+      toast("Only PDF files are supported.");continue;
+    }
+    if(file.size>50*1024*1024){toast(file.name+" exceeds the 50 MB limit.");continue}
+    const id=uid();
+    try{
+      if(!db)throw new Error("IndexedDB unavailable");
+      await dbPut({id,name:file.name,size:file.size,type:"application/pdf",added:new Date().toISOString(),blob:file});
+      state.docs.unshift({id,name:file.name,size:file.size,type:"application/pdf",added:new Date().toISOString()});
+      added++;
+    }catch(e){toast("Could not store "+file.name+". Check browser storage permissions.");}
+  }
+  save();renderAll();if(added)toast(added+" PDF"+(added===1?"":"s")+" added to your library.");
+}
+$("pdfInput").addEventListener("change",e=>{importPDFs(e.target.files);e.target.value=""});
+
+function renderDocs(){
+  const query=($("docSearch")?.value||"").trim().toLowerCase();
+  const sort=$("docSort")?.value||"new";
+  let docs=state.docs.filter(d=>d.name.toLowerCase().includes(query));
+  if(sort==="az")docs.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==="large")docs.sort((a,b)=>(b.size||0)-(a.size||0));
+  else docs.sort((a,b)=>String(b.added).localeCompare(String(a.added)));
+  $("docCount").textContent=docs.length+" document"+(docs.length===1?"":"s");
+  $("docGrid").innerHTML=docs.length?docs.map(d=>`
+    <div class="card doccard">
+      <div class="fileicon">PDF</div>
+      <h3>${safe(d.name)}</h3>
+      <div class="muted small">${fmtSize(d.size||0)} · ${fmtDate(d.added)}</div>
+      <div class="docbottom"><button class="btn smallbtn" onclick="readPDF('${d.id}')">Open PDF ↗</button>
+      <button class="btn ghost smallbtn" onclick="deleteDoc('${d.id}')">Remove</button></div>
+    </div>`).join(""):`<div class="card empty" style="grid-column:1/-1"><div class="emptyicon">▤</div><h3>${query?"No matching documents":"Your library starts here"}</h3><p>${query?"Try a different search.":"Import a PDF to keep it in your local library."}</p><button class="btn" onclick="$('pdfInput').click()">＋ Import PDF</button></div>`;
+}
+async function readPDF(id){
+  try{
+    const item=await dbGet(id);
+    if(!item||!item.blob){toast("PDF file is unavailable. It may have been removed from browser storage.");return}
+    if(readerUrl)URL.revokeObjectURL(readerUrl);
+    readerUrl=URL.createObjectURL(item.blob);
+    $("readerTitle").textContent=item.name;
+    $("readerBody").innerHTML=`<iframe class="reader" title="PDF document viewer"></iframe><p class="muted small">PDF viewing is handled by your browser. Search and annotation availability depends on its built-in PDF viewer.</p>`;
+    $("readerBody").querySelector("iframe").src=readerUrl;
+    $("readerDialog").showModal();
+    state.docs=state.docs.map(d=>d.id===id?{...d,lastOpened:new Date().toISOString()}:d);
+    save();
+  }catch(e){toast("Could not open this PDF.")}
+}
+function closeReader(){
+  $("readerDialog").close();
+  if(readerUrl){URL.revokeObjectURL(readerUrl);readerUrl=null}
+  $("readerBody").innerHTML="";
+}
+async function deleteDoc(id){
+  const d=state.docs.find(x=>x.id===id);
+  if(!d||!confirm('Remove "'+d.name+'" from your library?'))return;
+  try{await dbDelete(id)}catch(e){}
+  state.docs=state.docs.filter(x=>x.id!==id);save();renderAll();toast("Document removed.");
+}
+
+function openNote(id){
+  const n=state.notes.find(x=>x.id===id);
+  $("noteDialogTitle").textContent=n?"Edit note":"New note";
+  $("noteId").value=n?.id||"";
+  $("noteTitle").value=n?.title||"";
+  $("noteBody").value=n?.body||"";
+  $("noteTag").value=n?.tag||"";
+  notePinned=!!n?.pinned;
+  $("pinToggle").classList.toggle("on",notePinned);
+  $("pinToggle").setAttribute("aria-pressed",String(notePinned));
+  $("noteDialog").showModal();
+}
+function togglePinForm(){
+  notePinned=!notePinned;
+  $("pinToggle").classList.toggle("on",notePinned);
+  $("pinToggle").setAttribute("aria-pressed",String(notePinned));
+}
+$("noteForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=$("noteId").value||uid();
+  const old=state.notes.find(n=>n.id===id);
+  const note={id,title:$("noteTitle").value.trim(),body:$("noteBody").value.trim(),
+    tag:$("noteTag").value.trim()||"General",pinned:notePinned,
+    created:old?.created||new Date().toISOString(),updated:new Date().toISOString()};
+  if(!note.title||!note.body){toast("Add a title and some note text.");return}
+  state.notes=old?state.notes.map(n=>n.id===id?note:n):[note,...state.notes];
+  save();$("noteDialog").close();renderAll();toast("Note saved.");
+});
+function renderNotes(){
+  const q=($("noteSearch")?.value||"").trim().toLowerCase();
+  const filter=$("noteFilter")?.value||"all";
+  let notes=state.notes.filter(n=>(n.title+" "+n.body+" "+n.tag).toLowerCase().includes(q)&&(filter!=="pinned"||n.pinned));
+  notes.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||String(b.updated).localeCompare(String(a.updated)));
+  $("noteGrid").innerHTML=notes.length?notes.map(n=>`
+    <div class="card notecard" onclick="openNote('${n.id}')">
+      <div style="display:flex;justify-content:space-between;gap:8px"><span class="tag">${safe(n.tag||"General")}</span><span class="muted">${n.pinned?"◆":""}</span></div>
+      <h3>${safe(n.title)}</h3><p>${safe(n.body)}</p>
+      <div class="notefoot"><span>${fmtDate(n.updated)}</span><button class="btn ghost smallbtn" onclick="event.stopPropagation();deleteNote('${n.id}')">Delete</button></div>
+    </div>`).join(""):`<div class="card empty" style="grid-column:1/-1"><div class="emptyicon">▧</div><h3>No notes found</h3><p>Create a note to capture your first insight.</p><button class="btn" onclick="openNote()">＋ New note</button></div>`;
+}
+function deleteNote(id){
+  if(!confirm("Delete this note?"))return;
+  state.notes=state.notes.filter(n=>n.id!==id);save();renderAll();toast("Note deleted.");
+}
+
+function openFlashcard(id){
+  const c=state.cards.find(x=>x.id===id);
+  $("flashDialogTitle").textContent=c?"Edit flashcard":"New flashcard";
+  $("flashId").value=c?.id||"";
+  $("flashQuestion").value=c?.question||"";
+  $("flashAnswer").value=c?.answer||"";
+  $("flashSubject").value=c?.subject||"General";
+  $("flashDialog").showModal();
+}
+$("flashForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=$("flashId").value||uid();
+  const old=state.cards.find(c=>c.id===id);
+  const card={id,question:$("flashQuestion").value.trim(),answer:$("flashAnswer").value.trim(),
+    subject:$("flashSubject").value.trim()||"General",created:old?.created||new Date().toISOString(),
+    known:old?.known||false,reviews:old?.reviews||0,lastReviewed:old?.lastReviewed||null};
+  if(!card.question||!card.answer){toast("Add a question and answer.");return}
+  state.cards=old?state.cards.map(c=>c.id===id?card:c):[card,...state.cards];
+  save();$("flashDialog").close();resetFlash();renderAll();toast("Flashcard saved.");
+});
+function resetFlash(){
+  const sel=$("flashCategory")?.value||"all";
+  const categories=[...new Set(state.cards.map(c=>c.subject||"General"))].sort();
+  $("flashCategory").innerHTML='<option value="all">All subjects</option>'+categories.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join("");
+  $("flashCategory").value=categories.includes(sel)?sel:"all";
+  flashQueue=state.cards.filter(c=>$("flashCategory").value==="all"||(c.subject||"General")===$("flashCategory").value);
+  flashIndex=0;flashFlipped=false;flashSessionReviewed=new Set();renderFlashCurrent();renderFlashList();
+}
+function renderFlashCurrent(){
+  const c=flashQueue[flashIndex];
+  $("flashCount").textContent=c?`Card ${flashIndex+1} of ${flashQueue.length}`:"No cards yet";
+  $("flashLabel").textContent=c?(flashFlipped?"ANSWER":"QUESTION"):"READY WHEN YOU ARE";
+  $("flashText").textContent=c?(flashFlipped?c.answer:c.question):"Create your first flashcard to begin.";
+  $("flashHint").textContent=c?(flashFlipped?"Tap again or move to the next card.":"Tap the card to reveal the answer."):"Add a question and answer to start reviewing.";
+  $("fcTotal").textContent=state.cards.length;
+  $("fcReviewed").textContent=state.cards.filter(c=>c.lastReviewed===today()).length;
+  $("fcQueue").textContent=state.cards.filter(c=>!c.known).length;
+  $("fcKnown").textContent=state.cards.filter(c=>c.known).length;
+}
+function flipFlash(){if(!flashQueue.length)return;flashFlipped=!flashFlipped;renderFlashCurrent()}
+function nextFlash(){if(!flashQueue.length)return;flashIndex=(flashIndex+1)%flashQueue.length;flashFlipped=false;renderFlashCurrent()}
+function prevFlash(){if(!flashQueue.length)return;flashIndex=(flashIndex-1+flashQueue.length)%flashQueue.length;flashFlipped=false;renderFlashCurrent()}
+function rateFlash(known){
+  const c=flashQueue[flashIndex];if(!c)return;
+  state.cards=state.cards.map(x=>x.id===c.id?{...x,known,reviews:(x.reviews||0)+1,lastReviewed:today()}:x);
+  flashSessionReviewed.add(c.id);save();nextFlash();renderAll();
+}
+function renderFlashList(){
+  $("flashList").innerHTML=state.cards.length?state.cards.map(c=>`
+    <div class="card notecard" onclick="selectFlash('${c.id}')">
+      <span class="tag">${safe(c.subject||"General")}</span><h3>${safe(c.question)}</h3>
+      <p>${safe(c.answer)}</p><div class="notefoot"><span>${c.known?"✓ Known":"In progress"}</span><button class="btn ghost smallbtn" onclick="event.stopPropagation();editFlash('${c.id}')">Edit</button><button class="btn ghost smallbtn" onclick="event.stopPropagation();deleteFlash('${c.id}')">Delete</button></div>
+    </div>`).join(""):`<div class="card empty" style="grid-column:1/-1"><div class="emptyicon">▣</div><h3>No flashcards yet</h3><p>Create your own questions and answers.</p><button class="btn" onclick="openFlashcard()">＋ Create card</button></div>`;
+}
+function selectFlash(id){
+  const c=state.cards.find(x=>x.id===id);if(!c)return;
+  const sel=$("flashCategory");sel.value="all";
+  resetFlash();flashIndex=flashQueue.findIndex(x=>x.id===id);flashFlipped=false;renderFlashCurrent();
+  $("flashWorkspace").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function editFlash(id){openFlashcard(id)}
+function deleteFlash(id){
+  if(!confirm("Delete this flashcard?"))return;
+  state.cards=state.cards.filter(c=>c.id!==id);save();resetFlash();renderAll();toast("Flashcard deleted.");
+}
+
+function startQuiz(){
+  if(state.cards.length<2){toast("Create at least two flashcards first.");go("flashcards");return}
+  const shuffled=[...state.cards].sort(()=>Math.random()-.5).slice(0,Math.min(10,state.cards.length));
+  quizSession={questions:shuffled,index:0,answers:[],selected:null,finished:false};
+  go("quiz");renderQuiz();
+}
+function renderQuiz(){
+  const area=$("quizArea");area.style.display="block";
+  const s=quizSession;
+  if(!s){area.style.display="none";return}
+  if(s.finished){
+    const correct=s.answers.filter(a=>a.correct).length;
+    const pct=Math.round(correct/s.questions.length*100);
+    $("quizArea").innerHTML=`<div class="eyebrow">SESSION COMPLETE</div><h2 style="margin-top:12px">You finished your quiz.</h2><div class="statvalue">${pct}%</div><p class="muted">You answered ${correct} out of ${s.questions.length} questions correctly.</p><div class="progress"><span style="width:${pct}%"></span></div><div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="startQuiz()">Try again</button><button class="btn secondary" onclick="quizSession=null;$('quizArea').style.display='none'">Done</button></div>`;
+    return;
+  }
+  const c=s.questions[s.index];
+  const distractors=state.cards.filter(x=>x.id!==c.id&&x.answer!==c.answer)
+    .sort(()=>Math.random()-.5).slice(0,3).map(x=>x.answer);
+  const opts=[...new Set([c.answer,...distractors])].sort(()=>Math.random()-.5);
+  s.currentOptions=opts;
+  area.innerHTML=`<div class="eyebrow">QUESTION ${s.index+1} OF ${s.questions.length}</div><div class="progress" style="margin:15px 0"><span style="width:${s.index/s.questions.length*100}%"></span></div><h2 style="line-height:1.6;margin:20px 0">${safe(c.question)}</h2><p class="muted small">Choose the best answer.</p><div id="quizOptions">${opts.map((o,i)=>`<button class="quizoption" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${safe(o)}</button>`).join("")}</div><div id="quizFeedback" class="muted" style="margin-top:12px"></div><div class="formactions"><button class="btn" id="quizNext" disabled onclick="nextQuiz()">${s.index===s.questions.length-1?"See results":"Next question →"}</button></div>`;
+}
+function answerQuiz(index){
+  const s=quizSession;if(!s||s.selected!==null)return;
+  s.selected=index;
+  const c=s.questions[s.index],chosen=s.currentOptions[index];
+  const correct=chosen===c.answer;
+  s.answers.push({question:c.question,chosen,correct,answer:c.answer});
+  document.querySelectorAll(".quizoption").forEach((b,i)=>{
+    b.disabled=true;
+    if(s.currentOptions[i]===c.answer)b.classList.add("correct");
+    else if(i===index)b.classList.add("wrong");
+  });
+  $("quizFeedback").textContent=correct?"Correct — well done.":"Not quite. Correct answer: "+c.answer;
+  $("quizFeedback").style.color=correct?"var(--green)":"var(--red)";
+  $("quizNext").disabled=false;
+}
+function nextQuiz(){
+  const s=quizSession;if(!s||s.selected===null)return;
+  if(s.index<s.questions.length-1){s.index++;s.selected=null;renderQuiz();return}
+  const correct=s.answers.filter(a=>a.correct).length;
+  state.quizzes.unshift({id:uid(),date:new Date().toISOString(),correct,total:s.questions.length,
+    percent:Math.round(correct/s.questions.length*100)});
+  logActivity();save();s.finished=true;renderQuiz();renderAll();
+}
+function renderQuizHistory(){
+  $("quizAvailable").textContent=state.cards.length;
+  $("startQuizBtn").disabled=state.cards.length<2;
+  $("quizHistory").innerHTML=state.quizzes.length?state.quizzes.slice(0,5).map(q=>`
+    <div class="docrow"><div class="fileicon">✳</div><div class="docmeta"><div class="docname">${q.percent}% accuracy</div><div class="muted small">${fmtDate(q.date)} · ${q.correct}/${q.total} correct</div></div><span class="tag">${q.percent>=80?"Strong":q.percent>=50?"Growing":"Review"}</span></div>`).join(""):`<div class="empty"><div class="emptyicon">✳</div><p>No quiz results yet.</p></div>`;
+}
+
+function chartHTML(values,labels){
+  const max=Math.max(1,...values);
+  return values.map((v,i)=>`<div class="barcol"><div class="barval">${safe(v)}</div><div class="bar" style="height:${Math.max(3,v/max*100)}%"></div><div class="barlabel">${safe(labels[i])}</div></div>`).join("");
+}
+function renderCharts(){
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    days.push({key,label:d.toLocaleDateString(undefined,{weekday:"short"}),value:Number(state.activity[key]||0)});
+  }
+  $("dashChart").innerHTML=chartHTML(days.map(d=>d.value),days.map(d=>d.label));
+  const recent=state.quizzes.slice(0,7).reverse();
+  $("accuracyChart").innerHTML=recent.length?chartHTML(recent.map(q=>q.percent),recent.map((q,i)=>"#"+(i+1))):`<div class="empty" style="width:100%">Complete a quiz to see your accuracy chart.</div>`;
+}
+function renderAnalytics(){
+  const total=state.quizzes.reduce((n,q)=>n+q.total,0);
+  const correct=state.quizzes.reduce((n,q)=>n+q.correct,0);
+  const avg=total?Math.round(correct/total*100):null;
+  $("anDocs").textContent=state.docs.length;$("anNotes").textContent=state.notes.length;
+  $("anQuizzes").textContent=state.quizzes.length;$("anAccuracy").textContent=avg===null?"—":avg+"%";
+  const milestones=[
+    ["First document",state.docs.length>=1,"Import a PDF"],
+    ["Idea collector",state.notes.length>=5,"Save five notes"],
+    ["Memory builder",state.cards.length>=10,"Create ten flashcards"],
+    ["Quiz taker",state.quizzes.length>=1,"Complete a quiz"],
+    ["Consistent learner",Object.values(state.activity).filter(v=>v>0).length>=7,"Study on seven days"]
+  ];
+  $("milestones").innerHTML=milestones.map(m=>`<div class="docrow"><div class="fileicon">${m[1]?"✓":"✧"}</div><div class="docmeta"><div class="docname">${safe(m[0])}</div><div class="muted small">${m[1]?"Milestone achieved":safe(m[2])}</div></div><span class="tag">${m[1]?"UNLOCKED":"IN PROGRESS"}</span></div>`).join("");
+  $("historyTable").innerHTML=state.quizzes.length?state.quizzes.slice(0,20).map(q=>`<div class="docrow"><div class="docmeta"><div class="docname">${fmtDate(q.date)}</div><div class="muted small">${q.correct} correct out of ${q.total}</div></div><div style="min-width:90px"><div style="text-align:right;margin-bottom:7px;font-weight:750">${q.percent}%</div><div class="progress"><span style="width:${q.percent}%"></span></div></div></div>`).join(""):`<div class="empty">Your quiz history will appear here.</div>`;
+}
+function renderRecent(){
+  const docs=[...state.docs].sort((a,b)=>String(b.lastOpened||b.added).localeCompare(String(a.lastOpened||a.added))).slice(0,4);
+  $("recentDocs").innerHTML=docs.length?docs.map(d=>`<div class="docrow"><div class="fileicon">PDF</div><div class="docmeta"><div class="docname">${safe(d.name)}</div><div class="muted small">${fmtDate(d.lastOpened||d.added)}</div></div><button class="btn ghost smallbtn" onclick="readPDF('${d.id}')">Open</button></div>`).join(""):`<div class="empty"><div class="emptyicon">▤</div><h3>No documents yet</h3><p>Import a PDF to begin.</p><button class="btn" onclick="go('documents')">Open library</button></div>`;
+}
+function renderAll(){
+  $("statDocs").textContent=state.docs.length;
+  $("statNotes").textContent=state.notes.length;
+  $("statCards").textContent=state.cards.length;
+  const total=state.quizzes.reduce((n,q)=>n+q.total,0);
+  const correct=state.quizzes.reduce((n,q)=>n+q.correct,0);
+  const avg=total?Math.round(correct/total*100):null;
+  $("statAccuracy").textContent=avg===null?"—":avg+"%";
+  $("dashScore").textContent=(avg===null?0:avg)+"%";
+  $("dashProgress").style.width=(avg||0)+"%";
+  $("dashScoreCaption").textContent=avg===null?"Complete a quiz to see your performance.":state.quizzes.length+" quiz session"+(state.quizzes.length===1?"":"s")+" completed.";
+  renderRecent();renderDocs();renderNotes();renderFlashCurrent();renderFlashList();
+  renderQuizHistory();renderAnalytics();renderCharts();
+}
+function exportData(){
+  const data={format:"clarify-backup-v1",exportedAt:new Date().toISOString(),
+    name:state.name,theme:state.theme,notes:state.notes,cards:state.cards,
+    quizzes:state.quizzes,activity:state.activity,
+    docs:state.docs.map(({id,name,size,type,added})=>({id,name,size,type,added}))};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download="clarify-backup-"+today()+".json";a.click();URL.revokeObjectURL(url);
+  toast("Workspace backup downloaded. PDF files are not included.");
+}
+$("backupInput").addEventListener("change",async e=>{
+  const file=e.target.files[0];e.target.value="";if(!file)return;
+  try{
+    const data=JSON.parse(await file.text());
+    if(data.format!=="clarify-backup-v1"||!Array.isArray(data.notes)||!Array.isArray(data.cards)||!Array.isArray(data.quizzes)){
+      throw new Error("This file is not a valid CLARIFY backup.");
+    }
+    if(!confirm("Import this backup? Existing notes, cards, and quiz history will be replaced."))return;
+    state={...state,name:String(data.name||"").slice(0,40),
+      theme:data.theme==="light"?"light":"dark",
+      notes:data.notes, cards:data.cards,quizzes:data.quizzes,
+      activity:data.activity&&typeof data.activity==="object"?data.activity:{},
+      docs:state.docs,onboarded:true};
+    save();setTheme();updateGreeting();renderAll();toast("Backup restored. PDF files must be imported again.");
+  }catch(err){toast(err.message||"Could not import this backup.");}
+});
+async function clearWorkspace(){
+  if(!confirm("Permanently clear this local CLARIFY workspace, including PDFs, notes, flashcards, and quiz history? Export a backup first if you need one."))return;
+  try{await dbClear()}catch(e){}
+  state={name:state.name,theme:state.theme,notes:[],cards:[],quizzes:[],activity:{},docs:[],onboarded:true};
+  save();resetFlash();renderAll();toast("Workspace cleared.");
+}
+
+async function init(){
+  loadState();setTheme();updateGreeting();
+  try{db=await openDB()}catch(e){db=null}
+  if(!state.onboarded){$("onboard").hidden=false;$("username").value=state.name||""}
+  resetFlash();renderAll();
+  if(!db)toast("PDF storage is unavailable in this browser. Other features still work.");
+}
+init();
+</script>
+</body>
+</html>
